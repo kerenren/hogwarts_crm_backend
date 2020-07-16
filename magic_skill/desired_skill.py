@@ -9,5 +9,5 @@ class DesiredSkill(Skill):
     def set_level(self, value):
         self.level = value
 
-    def get_level(self, value):
-        self.level = value
+    def get_level(self):
+        return self.level

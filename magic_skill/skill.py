@@ -1,10 +1,11 @@
+import json
+
+
 class Skill:
 
-    def __init__(self,name):
+    def __init__(self, name):
         self.name = name
 
-    # def set_skill(self, name):
-    #     self.name = name
-    #
-    # def get_skill(self):
-    #     return self.name
+    def __str__(self):
+        skill_json_string = json.dumps(self.__dict__)
+        return skill_json_string

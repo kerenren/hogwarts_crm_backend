@@ -9,11 +9,12 @@ class ExistingSkill(Skill):
     def set_level(self, value):
         self.level = value
 
-    def get_level(self, value):
-        self.level = value
+    def get_level(self):
+        return self.level
 
 
 # skill = ExistingSkill("fly")
 # skill.set_level(2)
-#
-# print(skill.__dict__)
+# print(type(skill.__dict__))
+# print(skill.__str__())
+# self note: ExistingSkill inherited .__str__() from Skill
