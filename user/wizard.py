@@ -15,3 +15,8 @@ class Wizard:
     def __str__(self):
         person_json = json.dumps(self, default=lambda obj: obj.__dict__)
         return person_json
+
+    def get_email(self):
+        return self.email
+
+
