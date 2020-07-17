@@ -1,0 +1,60 @@
+{
+    "potter@hogwartsedu.com": {
+        "id": "er4",
+        "first_name": "Harry",
+        "last_name": "Potter",
+        "email": "potter@hogwartsedu.com",
+        "password": "nnnn",
+        "creation_time": "07-17-20",
+        "last_updated_time": "07-17-20",
+        "existing_magic_skills": [
+            {
+                "name": "Obliviate",
+                "level": 3
+            },
+            {
+                "name": "expanding",
+                "level": 5
+            }
+        ],
+        "desired_magic_skills": [
+            {
+                "name": "invisible",
+                "level": 1
+            },
+            {
+                "name": "fly",
+                "level": 5
+            }
+        ]
+    },
+    "hermione@hogwartsedu.com": {
+        "id": "er4",
+        "first_name": "Hermione",
+        "last_name": "Granger",
+        "email": "hermione@hogwartsedu.com",
+        "password": "nnnn",
+        "creation_time": "07-17-20",
+        "last_updated_time": "07-17-20",
+        "existing_magic_skills": [
+            {
+                "name": "expanding",
+                "level": 5
+            }
+        ],
+        "desired_magic_skills": [
+            {
+                "name": "invisible",
+                "level": 1
+            },
+            {
+                "name": "fly",
+                "level": 5
+            },
+            {
+                "name": "Riddikulu",
+                "level": 5
+            }
+        ]
+    }
+}

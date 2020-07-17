@@ -4,8 +4,7 @@ class Validator:
         # string_type = [user_dict["id"],user_dict["first_name"],user_dict["last_name"],user_dict["email"],user_dict["password"]]
 
     # when we create a user, the user_dict is coming from POST response json, thus the value of num should be num not string of num
-    def valid_skill_dict_vale(self, skill):
-        print(f"{skill}")
+    def valid_skill_dict_value(self, skill):
         skills__list = self.user_dict[skill]
         if len(skills__list) != 0:
             for skill in skills__list:
@@ -21,8 +20,8 @@ class Validator:
         for item in string_list:
             if type(item) != str:
                 raise ValueError("you fields is not a string")
-        self.valid_skill_dict_vale("existing_magic_skills")
-        self.valid_skill_dict_vale("desired_magic_skills")
+        self.valid_skill_dict_value("existing_magic_skills")
+        self.valid_skill_dict_value("desired_magic_skills")
 
     def valid_user_fields_exist(self):
         for value in self.user_dict.values():
