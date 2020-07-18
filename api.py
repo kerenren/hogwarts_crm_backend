@@ -60,7 +60,7 @@ def get_student(student_email):
 @app.route("/students/add_students")
 def get_students_per_day():
     # query parameter ?added_on=2016_01_03
-    creation_time = request.args.get('creation_time')
+    creation_time = request.args.get('added_on')
     students_per_day = data_layer.get_students_per_day(creation_time)
     # date existence validation
     if len(students_per_day) == 0:
@@ -100,7 +100,6 @@ def add_student():
 
     with open("data/admin.json", "r") as r_f:
         admins_dict = json.load(r_f)
-        print(type(admins_dict[auth_email]))
         if auth_email not in admins_dict.keys() or admins_dict[auth_email]['password'] != auth_password:
             abort(404, "Only Admin can create new student account")
         # add new student to data_layer students dict and students.json
@@ -140,12 +139,22 @@ def edit_student():
     data_layer.persist_students()
     return app.response_class(response=json.dumps({"message": "The student's capabilities has been updated"}))
 
+
 # question, after load all student from json to student_dictionary in datalayer, and call get_student from datalayer, the student instance changed from Student class to dict. How should we deal with this in real database practice?
 
 # Create DELETE (with an empty implementation at this point) route for delete a student
-@app.route("/admin/delete", methods=["POST"])
+@app.route("/admin/delete", methods=["DELETE"])
 def delete_student():
-    pass
+    student = request.json
+    secrete_password = request.headers.get("secrete_password")
+    if secrete_password != "88888":
+        abort(404, "wrong secrete_password!")
+    data_layer.remove_student(student)
+
+    data_layer.persist_students()
+    return app.response_class(response=json.dumps({"message": "user has been deleted!"}),
+                              status=200,
+                              mimetype="application/json")
 
 
 if __name__ == "__main__":

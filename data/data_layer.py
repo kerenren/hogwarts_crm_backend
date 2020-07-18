@@ -20,9 +20,9 @@ class DataLayer:
         print("student has been added to data_layer students_dict:", self.__students)
 
     def remove_student(self, student):
-        if student.get_email() not in self.__students.keys():
+        if student["email"] not in self.__students.keys():
             raise ValueError("Email doesn't exist!")
-        del self.__students[student.get_email()]
+        del self.__students[student["email"]]
         print("student has been removed from data_layer students_dict:", self.__students)
 
     # getting a specific student from the dictionary by its email.
