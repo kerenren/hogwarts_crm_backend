@@ -34,21 +34,17 @@ class DataLayer:
         return student
 
     def extract_objs_by_value(self, value, objs):
-        new_objs ={}
-        for k, v in objs:
+        new_objs = {}
+        for k, v in objs.items():
             if isinstance(v, dict):
                 if value in v.values():
                     new_objs.update({v["email"]: v})
-            return None
         return new_objs
 
     #  get added students per day of the year
     def get_students_per_day(self, creation_time):
         all_students = self.get_all_students()
         students_per_day = self.extract_objs_by_value(creation_time, all_students)
-        # date existence validation
-        if students_per_day is None:
-            raise ValueError(f"No students created on {creation_time}")
         return students_per_day
 
     # receiving all students within the dictionary.

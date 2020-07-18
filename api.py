@@ -59,8 +59,11 @@ def get_students_per_day():
     # query parameter ?added_on=2016_01_03
     creation_time = request.args.get('creation_time')
     students_per_day = data_layer.get_students_per_day(creation_time)
+    # date existence validation
+    if len(students_per_day) == 0:
+        abort(404, f"No students created on {creation_time}")
     return app.response_class(response=json.dumps(students_per_day),
-                              status= 200,
+                              status=200,
                               mimetype="application/json")
 
 
