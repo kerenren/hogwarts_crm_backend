@@ -68,15 +68,21 @@ def get_students_per_day():
 
 
 # get count of desired skills (how many of the students desire a specific skill)
-@app.route("/students/<string:desired_skill>")
+@app.route("/students/desired_magic_skill/<string:desired_skill>")
 def count_desired_skill(desired_skill):
-    pass
+    cnt = data_layer.count_skill("desired_magic_skills", desired_skill)
+    return app.response_class(response=json.dumps({desired_skill: cnt}),
+                              status=200,
+                              mimetype="application/json")
 
 
 # get count for how many students have each type of skill
-@app.route("/students/<string:existing_skill>")
+@app.route("/students/existing_magic_skill/<string:existing_skill>")
 def count_existing_skill(existing_skill):
-    pass
+    cnt = data_layer.count_skill("existing_magic_skills",existing_skill)
+    return app.response_class(response=json.dumps({existing_skill: cnt}),
+                              status=200,
+                              mimetype="application/json")
 
 
 # add a new student (request which will be invoked by admin)  - the route will receive a json with the student fields.

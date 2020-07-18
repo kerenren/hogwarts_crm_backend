@@ -41,6 +41,18 @@ class DataLayer:
                     new_objs.update({v["email"]: v})
         return new_objs
 
+    def count_skill(self, skill_type, skill_name):
+        all_students = self.get_all_students()
+        counter = 0
+        for k, v in all_students.items():
+            if isinstance(v, dict):
+                skills_list = v[skill_type]
+                duplicated_skills_list = [i["name"] for i in skills_list if i["name"] == skill_name]
+                cnt = len(duplicated_skills_list)
+                counter += cnt
+        return counter
+
+
     #  get added students per day of the year
     def get_students_per_day(self, creation_time):
         all_students = self.get_all_students()
