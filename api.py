@@ -1,6 +1,7 @@
 from flask import Flask, json, abort, request, render_template
 from user.student import Student
 from data.data_layer import DataLayer
+from validators.validators import Validators
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '9OLWxND4o83j4K4iuopO'
@@ -15,6 +16,8 @@ def before_first_request_func():
     new_data_layer = DataLayer()
     new_students_dict = data_layer.load_all_students()
     return new_students_dict
+
+
 # question: why variables inside before_first_request_func can not access outer scope variable even with the same name?
 
 
@@ -89,14 +92,14 @@ def count_existing_skill(existing_skill):
 @app.route("/admin/add_student", methods=["POST"])
 def add_student():
     student_dict = request.json
-    # todo: validate student fields and exitance
+    # todo: validate student fields and existence
     new_student = Student.from_json(student_dict)
     authorization = request.headers.get("Authorization").split(":")
     print(authorization)
     auth_email = authorization[0]
-    auth_password= authorization[1]
+    auth_password = authorization[1]
     print(auth_email)
-    
+
     with open("data/admin.json", "r") as r_f:
         admins_dict = json.load(r_f)
         print(type(admins_dict[auth_email]))
@@ -116,10 +119,14 @@ def add_student():
 def log_in():
     # ? how to transfer user credential to json?
     student_credential = request.json
-    # todo: validate student credential
-    # logic
 
-    return app.response_class(response=json.dumps(student_credential),
+    # validate student credential
+    validator = Validators(student_credential)
+    validation = validator.valid_user_credential(students_dict)
+    if not validation:
+        abort(404, "wrong user email or password")
+
+    return app.response_class(response=json.dumps({"message": "user log in successfully!"}),
                               status=200,
                               mimetype="application/json")
 
