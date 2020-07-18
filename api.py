@@ -95,10 +95,8 @@ def add_student():
     # todo: validate student fields and existence
     new_student = Student.from_json(student_dict)
     authorization = request.headers.get("Authorization").split(":")
-    print(authorization)
     auth_email = authorization[0]
     auth_password = authorization[1]
-    print(auth_email)
 
     with open("data/admin.json", "r") as r_f:
         admins_dict = json.load(r_f)
@@ -134,10 +132,15 @@ def log_in():
 # edit student - the route will receive a json with the student fields
 @app.route("/admin/edit_student", methods=["PUT"])
 def edit_student():
-    data = request.json
+    updated_student = request.json
     # todo: validate students fields
-    pass
+    student_email = updated_student["email"]
+    data_layer.edit_student(updated_student, student_email)
 
+    data_layer.persist_students()
+    return app.response_class(response=json.dumps({"message": "The student's capabilities has been updated"}))
+
+# question, after load all student from json to student_dictionary in datalayer, and call get_student from datalayer, the student instance changed from Student class to dict. How should we deal with this in real database practice?
 
 # Create DELETE (with an empty implementation at this point) route for delete a student
 @app.route("/admin/delete", methods=["POST"])

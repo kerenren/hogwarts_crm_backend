@@ -30,12 +30,25 @@ class Student(Wizard):
         # todo : validate skills dict if it's empty
         return self.existing_magic_skills
 
+    def get_skill_by_name(self, skill_name):
+        for skill in self.existing_magic_skills:
+            if skill["name"] == skill_name:
+                return skill
+
     def add_existing_skill(self, skill_name, level_value):
         # todo : validate skills level should be 1-5, name string length > 0
         existing_skill = ExistingSkill(skill_name)
         existing_skill.set_level(level_value)
         self.existing_magic_skills.append(existing_skill.__dict__)
-        self.last_updated_time = datetime.now().strftime("%m-%d-%y")
+        self.last_updated_time = datetime.now().strftime("%m-%d-%y %H:%I:%S")
+        print(f"The existing skill {skill_name} has been added! ")
+
+    def update_existing_skill(self, skill_name, level_value):
+        # todo : validate skills level should be 1-5, name string length > 0
+        existing_skill = self.get_skill_by_name(skill_name)
+        existing_skill["level"] = level_value
+        self.last_updated_time = datetime.now().strftime("%m-%d-%y %H:%I:%S")
+        print(f"The existing skill {skill_name} has been updated! ")
 
     def get_desired_skills(self):
         # todo : validate skills dict if it's empty
@@ -46,7 +59,8 @@ class Student(Wizard):
         desired_skill = DesiredSkill(skill_name)
         desired_skill.set_level(level_value)
         self.desired_magic_skills.append(desired_skill.__dict__)
-        self.last_updated_time = datetime.now().strftime("%m-%d-%y")
+        self.last_updated_time = datetime.now().strftime("%m-%d-%y %H:%I:%S")
+        print(f"The desired skill {skill_name} has been updated! ")
 
 # student = Student("er4", "Harry", "Potter", "potter@hogwartsedu.com", "nnnn")
 # student.add_desired_skill("invisible", 1)

@@ -31,6 +31,7 @@ class DataLayer:
             raise ValueError("Email doesn't exist!")
 
         student = self.__students[student_email]
+        print(help(student))
         return student
 
     def extract_objs_by_value(self, value, objs):
@@ -100,25 +101,48 @@ class DataLayer:
         else:
             raise Exception("student.json file doesn't exist")
 
-#
+    def edit_student(self, updated_student_dict, student_email):
+        if not self.__students[student_email]:
+            raise ValueError("Student email is not registered")
+        old_student = self.get_student(student_email)
+        existing_magic_skills = updated_student_dict["existing_magic_skills"]
+        desired_magic_skills = updated_student_dict["desired_magic_skills"]
+        # old_existing_magic_skills = old_student.get_existing_skills()
+        for skill in existing_magic_skills:
+            old_student.add_existing_skill(skill["name"], skill["level"])
+            # print(skill["name"])
+            # for i in range(len(old_existing_magic_skills)):
+            #     if skill["name"] == old_existing_magic_skills[i]["name"] :
+            #         print("old", old_existing_magic_skills[i])
+            #         old_student.update_existing_skill(skill["name"], skill["level"])
+            #     elif skill["name"] != old_existing_magic_skills[i]["name"]:
+            #         old_student.add_existing_skill(skill["name"], skill["level"])
+        for skill in desired_magic_skills:
+            old_student.add_desired_skill(skill["name"], skill["level"])
+
 # # for testing:
 # student = Student("er4", "Harry", "Potter", "potter@hogwartsedu.com", "nnnn")
 # student.add_existing_skill("Obliviate",3)
+# student.add_existing_skill("Expelliarmus", 4)
+# student.add_existing_skill("Flying", 5)
 # student.add_desired_skill("invisible", 1)
-# student.add_desired_skill("fly", 5)
-# student.add_existing_skill("expanding", 5)
+# student.add_desired_skill("Apparition", 5)
+# data = DataLayer()
+# data.add_student(student)
+# # data.persist_students()
+# # data.load_all_students()
+# data.get_student("potter@hogwartsedu.com")
+
 # student2 = Student.from_json(
 #     '{"id": "er4", "first_name": "Hermione", "last_name": "Granger", "email": "hermione@hogwartsedu.com", "password": "nnnn", "creation_time": "07-16-20", "last_updated_time": "", "existing_magic_skills": [{"name": "expanding", "level": 5}], "desired_magic_skills": [{"name": "invisible", "level": 1}, {"name": "fly", "level": 5}]}')
 # student2.add_desired_skill("Riddikulu", 5)
-# data = DataLayer()
-# data.add_student(student)
 # data.add_student(student2)
 # # data.remove_student(student)
 # student_json_str = data.convert_students_to_json_str()
 # student_dict = json.loads(student_json_str)
 # print(student_json_str)
-# data.persist_students()
-#
+
+
 # data.load_all_students()
 # print(data.get_all_students())
 # student_2=data.get_student("hermione@hogwartsedu.com")
