@@ -6,6 +6,7 @@ from user.student import Student
 # The DataLayer class will have a dictionary containing the students class instances.
 # each instance will be stored using its email property as the key within the dictionary.
 class DataLayer:
+
     def __init__(self, students={}):
         self.__students = students
 
@@ -32,6 +33,24 @@ class DataLayer:
         student = self.__students[student_email]
         return student
 
+    def extract_objs_by_value(self, value, objs):
+        new_objs ={}
+        for k, v in objs:
+            if isinstance(v, dict):
+                if value in v.values():
+                    new_objs.update({v["email"]: v})
+            return None
+        return new_objs
+
+    #  get added students per day of the year
+    def get_students_per_day(self, creation_time):
+        all_students = self.get_all_students()
+        students_per_day = self.extract_objs_by_value(creation_time, all_students)
+        # date existence validation
+        if students_per_day is None:
+            raise ValueError(f"No students created on {creation_time}")
+        return students_per_day
+
     # receiving all students within the dictionary.
     def get_all_students(self):
         return self.__students
@@ -43,8 +62,9 @@ class DataLayer:
 
     # persisting all the students' class instances in the dictionary into a json file called students.json
     def persist_students(self):
-        #  create path to json file
+        # find the folder obj of json file
         folder_where_json_file_is = pathlib.Path(__file__).parent
+        #  create path to json file with os.separator
         db_file = str(folder_where_json_file_is) + os.sep + "students.json"
 
         # check if json file exist
@@ -55,7 +75,7 @@ class DataLayer:
 
         students_json = self.convert_students_to_json_str()
 
-        with open("students.json", "a") as write_file:
+        with open(db_file, "a") as write_file:
             write_file.write(students_json)
             return "Persist is succeed"
 
@@ -63,17 +83,18 @@ class DataLayer:
     # into the students dictionary object of the DataLayer class.
     def load_all_students(self):
         folder_where_json_file_is = pathlib.Path(__file__).parent
+        # folder_where_json_file_is = pathlib.Path("./data")
         read_file = str(folder_where_json_file_is) + os.sep + "students.json"
-
+        print(read_file)
         if os.path.exists(read_file):
-            with open("students.json", "r") as read_file:
-                self.__students = json.load(read_file)
+            with open(read_file, "r") as r_file:
+                self.__students = json.load(r_file)
             return self.__students
         else:
             raise Exception("student.json file doesn't exist")
 
-
-# for testing:
+#
+# # for testing:
 # student = Student("er4", "Harry", "Potter", "potter@hogwartsedu.com", "nnnn")
 # student.add_existing_skill("Obliviate",3)
 # student.add_desired_skill("invisible", 1)
