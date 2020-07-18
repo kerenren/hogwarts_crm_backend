@@ -3,6 +3,8 @@ from user.student import Student
 from data.data_layer import DataLayer
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = '9OLWxND4o83j4K4iuopO'
+
 data_layer = DataLayer()
 students_dict = data_layer.load_all_students()
 skills_dict = {}
@@ -87,14 +89,26 @@ def count_existing_skill(existing_skill):
 @app.route("/admin/add_student", methods=["POST"])
 def add_student():
     student_dict = request.json
-    print(type(student_dict))
+    # todo: validate student fields and exitance
     new_student = Student.from_json(student_dict)
-    data_layer.add_student(new_student)
-    data_layer.persist_students()
-    # todo: validate student fields
-    return app.response_class(response=json.dumps(new_student.__dict__),
-                              status=200,
-                              mimetype="application/json")
+    authorization = request.headers.get("Authorization").split(":")
+    print(authorization)
+    auth_email = authorization[0]
+    auth_password= authorization[1]
+    print(auth_email)
+    
+    with open("data/admin.json", "r") as r_f:
+        admins_dict = json.load(r_f)
+        print(type(admins_dict[auth_email]))
+        if auth_email not in admins_dict.keys() or admins_dict[auth_email]['password'] != auth_password:
+            abort(404, "Only Admin can create new student account")
+        # add new student to data_layer students dict and students.json
+        data_layer.add_student(new_student)
+        data_layer.persist_students()
+
+        return app.response_class(response=json.dumps(new_student.__dict__),
+                                  status=200,
+                                  mimetype="application/json")
 
 
 # login a student(email + password) - the route will receive a json with the data.
