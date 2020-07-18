@@ -49,6 +49,10 @@ def get_student(student_email):
     if students_dict == {}:
         abort(404, "students_dict is empty")
 
+    if len(student_email) == 0:
+        abort(404, "students_email is missing")
+    if type(student_email) != str:
+        abort(404, "students_email should be a string")
     # student email existence has been validated inside data_layer.get_student method
     student = data_layer.get_student(student_email)
     return app.response_class(response=json.dumps(student),
@@ -63,8 +67,14 @@ def get_students_per_day():
     creation_time = request.args.get('added_on')
     students_per_day = data_layer.get_students_per_day(creation_time)
     # date existence validation
+
     if len(students_per_day) == 0:
         abort(404, f"No students created on {creation_time}")
+    if len(creation_time) == 0:
+        abort(404, "Missing creation_time")
+    if type(creation_time) != str:
+        abort(404, "creation_time should be a string")
+
     return app.response_class(response=json.dumps(students_per_day),
                               status=200,
                               mimetype="application/json")
@@ -92,7 +102,12 @@ def count_existing_skill(existing_skill):
 @app.route("/admin/add_student", methods=["POST"])
 def add_student():
     student_dict = request.json
-    # todo: validate student fields and existence
+
+    # validate student fields and existence
+    validator = Validators(students_dict)
+    validator.valid_user_fields_exist()
+    validator.valid_user_fields_type()
+
     new_student = Student.from_json(student_dict)
     authorization = request.headers.get("Authorization").split(":")
     auth_email = authorization[0]
@@ -119,6 +134,7 @@ def log_in():
 
     # validate student credential
     validator = Validators(student_credential)
+    validator.valid_user_fields_exist()
     validation = validator.valid_user_credential(students_dict)
     if not validation:
         abort(404, "wrong user email or password")
@@ -132,7 +148,13 @@ def log_in():
 @app.route("/admin/edit_student", methods=["PUT"])
 def edit_student():
     updated_student = request.json
-    # todo: validate students fields
+
+    # validate students fields value, types and existence
+    validator = Validators(updated_student)
+    validator.valid_user_fields_exist()
+    validator.valid_user_fields_type()
+    validator.valid_user_exist(students_dict)
+
     student_email = updated_student["email"]
     data_layer.edit_student(updated_student, student_email)
 
