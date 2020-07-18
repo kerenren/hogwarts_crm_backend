@@ -4,16 +4,20 @@
         "first_name": "Harry",
         "last_name": "Potter",
         "email": "potter@hogwartsedu.com",
-        "password": "nnnn",
+        "password": "yyyy",
         "creation_time": "07-17-20",
-        "last_updated_time": "07-17-20",
+        "last_updated_time": "07-18-20",
         "existing_magic_skills": [
             {
                 "name": "Obliviate",
                 "level": 3
             },
             {
-                "name": "expanding",
+                "name": "Expelliarmus",
+                "level": 4
+            },
+            {
+                "name": "Flying",
                 "level": 5
             }
         ],
@@ -23,7 +27,7 @@
                 "level": 1
             },
             {
-                "name": "fly",
+                "name": "Apparition",
                 "level": 5
             }
         ]
@@ -34,25 +38,66 @@
         "last_name": "Granger",
         "email": "hermione@hogwartsedu.com",
         "password": "nnnn",
-        "creation_time": "07-17-20",
-        "last_updated_time": "07-17-20",
+        "creation_time": "07-18-20",
+        "last_updated_time": "07-18-20",
         "existing_magic_skills": [
             {
-                "name": "expanding",
+                "name": "Oculus Reparo",
                 "level": 5
+            },
+            {
+                "name": "Wingardium Leviosa",
+                "level": 4
+            },
+            {
+                "name": "Obliviate",
+                "level": 4
             }
         ],
         "desired_magic_skills": [
             {
-                "name": "invisible",
-                "level": 1
+                "name": "Expelliarmus",
+                "level": 4
             },
             {
-                "name": "fly",
-                "level": 5
+                "name": "Flying",
+                "level": 2
             },
             {
                 "name": "Riddikulu",
+                "level": 5
+            }
+        ]
+    },
+    "weasley@hogwartsedu.com": {
+        "id": "eft1",
+        "first_name": "Ron",
+        "last_name": "Weasley",
+        "email": "weasley@hogwartsedu.com",
+        "password": "wwww",
+        "creation_time": "07-18-20",
+        "last_updated_time": "",
+        "existing_magic_skills": [
+            {
+                "name": "Flying",
+                "level": 5
+            },
+            {
+                "name": "Defence Against the Dark Arts",
+                "level": 4
+            },
+            {
+                "name": "Apparition",
+                "level": 2
+            }
+        ],
+        "desired_magic_skills": [
+            {
+                "name": "Expecto Patronum",
+                "level": 5
+            },
+            {
+                "name": "Avada Kedavra",
                 "level": 5
             }
         ]

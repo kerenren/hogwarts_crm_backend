@@ -13,8 +13,6 @@ def before_first_request_func():
     new_data_layer = DataLayer()
     new_students_dict = data_layer.load_all_students()
     return new_students_dict
-
-
 # question: why variables inside before_first_request_func can not access outer scope variable even with the same name?
 
 
@@ -79,7 +77,7 @@ def count_desired_skill(desired_skill):
 # get count for how many students have each type of skill
 @app.route("/students/existing_magic_skill/<string:existing_skill>")
 def count_existing_skill(existing_skill):
-    cnt = data_layer.count_skill("existing_magic_skills",existing_skill)
+    cnt = data_layer.count_skill("existing_magic_skills", existing_skill)
     return app.response_class(response=json.dumps({existing_skill: cnt}),
                               status=200,
                               mimetype="application/json")
@@ -88,10 +86,15 @@ def count_existing_skill(existing_skill):
 # add a new student (request which will be invoked by admin)  - the route will receive a json with the student fields.
 @app.route("/admin/add_student", methods=["POST"])
 def add_student():
-    data = request.json
+    student_dict = request.json
+    print(type(student_dict))
+    new_student = Student.from_json(student_dict)
+    data_layer.add_student(new_student)
+    data_layer.persist_students()
     # todo: validate student fields
-    # it should return a json string send to Student class from_json() to create student instance
-    pass
+    return app.response_class(response=json.dumps(new_student.__dict__),
+                              status=200,
+                              mimetype="application/json")
 
 
 # login a student(email + password) - the route will receive a json with the data.

@@ -17,13 +17,13 @@ class Student(Wizard):
         student_json = json.dumps(self.__dict__, default=lambda o: o.__dict__())
         return student_json
 
-    # converts user from json string to Student
-    # instance method because needs access to instance state
-    def from_json(json_string):
-        student_dict = json.loads(json_string)
+    # converts user from json to Student
+    @staticmethod
+    def from_json(student_dict):
         new_student = Student(student_dict["id"], student_dict["first_name"], student_dict["last_name"],
                               student_dict["email"], student_dict["password"], student_dict["existing_magic_skills"],
                               student_dict["desired_magic_skills"])
+        print(f'The new student account {student_dict["email"]} has been created ')
         return new_student
 
     def get_existing_skills(self):

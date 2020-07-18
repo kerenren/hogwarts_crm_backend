@@ -91,7 +91,6 @@ class DataLayer:
     # into the students dictionary object of the DataLayer class.
     def load_all_students(self):
         folder_where_json_file_is = pathlib.Path(__file__).parent
-        # folder_where_json_file_is = pathlib.Path("./data")
         read_file = str(folder_where_json_file_is) + os.sep + "students.json"
         print(read_file)
         if os.path.exists(read_file):
