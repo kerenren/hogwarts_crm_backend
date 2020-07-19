@@ -14,9 +14,9 @@ class Validators:
                     raise ValueError("Sorry, the skill level should be a number")
 
     def valid_user_fields_type(self):
+        print(self.user_dict)
         string_list = [self.user_dict["id"], self.user_dict["first_name"], self.user_dict["last_name"],
-                       self.user_dict["password"], self.user_dict["email"], self.user_dict["password"],
-                       self.user_dict["creation_time"], self.user_dict["last_updated_time"]]
+                       self.user_dict["password"], self.user_dict["email"], self.user_dict["password"]]
         for item in string_list:
             if type(item) != str:
                 raise ValueError("you fields is not a string")

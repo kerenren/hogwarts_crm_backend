@@ -104,7 +104,7 @@ def add_student():
     student_dict = request.json
 
     # validate student fields and existence
-    validator = Validators(students_dict)
+    validator = Validators(student_dict)
     validator.valid_user_fields_exist()
     validator.valid_user_fields_type()
 
