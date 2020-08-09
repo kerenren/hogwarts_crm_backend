@@ -1,4 +1,5 @@
 import json
+from datetime import datetime
 
 
 class Wizard:
@@ -19,4 +20,10 @@ class Wizard:
     def get_email(self):
         return self.email
 
+    def update_first_name(self, new_first_name):
+        self.first_name = new_first_name
+        self.last_updated_time = datetime.now().strftime("%m-%d-%y %H:%I:%S")
 
+    def update_last_name(self, new_last_name):
+        self.last_name = new_last_name
+        self.last_updated_time = datetime.now().strftime("%m-%d-%y %H:%I:%S")

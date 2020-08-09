@@ -17,22 +17,26 @@ class DataLayer:
 
         self.__students[student.get_email()] = student
         # the student here actually represents the student instance
-        print("student has been added to data_layer students_dict:", self.__students)
+        print(student, " has been added to data_layer students_dict:")
 
     def remove_student(self, student):
         if student["email"] not in self.__students.keys():
             raise ValueError("Email doesn't exist!")
         del self.__students[student["email"]]
-        print("student has been removed from data_layer students_dict:", self.__students)
+        print(student, "student has been removed from data_layer students_dict:")
 
-    # getting a specific student from the dictionary by its email.
+    # getting a specific student instance from the dictionary by its email.
     def get_student(self, student_email):
         if student_email not in self.__students.keys():
             raise ValueError("Email doesn't exist!")
 
         student = self.__students[student_email]
-        print(help(student))
-        return student
+        if isinstance(student, dict):
+            student_instance = Student.from_json(student)
+            return student_instance
+        else:
+            print(type(student))
+            return student
 
     def extract_objs_by_value(self, value, objs):
         new_objs = {}
@@ -104,21 +108,23 @@ class DataLayer:
     def edit_student(self, updated_student_dict, student_email):
         if not self.__students[student_email]:
             raise ValueError("Student email is not registered")
-        old_student = self.get_student(student_email)
+        student_instance = self.get_student(student_email)
         existing_magic_skills = updated_student_dict["existing_magic_skills"]
         desired_magic_skills = updated_student_dict["desired_magic_skills"]
-        # old_existing_magic_skills = old_student.get_existing_skills()
+        new_first_name = updated_student_dict["first_name"]
+        new_last_name = updated_student_dict["last_name"]
+
+        student_instance.update_first_name(new_first_name)
+        student_instance.update_last_name(new_last_name)
+
         for skill in existing_magic_skills:
-            old_student.add_existing_skill(skill["name"], skill["level"])
-            # print(skill["name"])
-            # for i in range(len(old_existing_magic_skills)):
-            #     if skill["name"] == old_existing_magic_skills[i]["name"] :
-            #         print("old", old_existing_magic_skills[i])
-            #         old_student.update_existing_skill(skill["name"], skill["level"])
-            #     elif skill["name"] != old_existing_magic_skills[i]["name"]:
-            #         old_student.add_existing_skill(skill["name"], skill["level"])
+            student_instance.update_existing_skill(skill["name"], skill["level"])
+
         for skill in desired_magic_skills:
-            old_student.add_desired_skill(skill["name"], skill["level"])
+            student_instance.update_desired_skill(skill["name"], skill["level"])
+        self.remove_student(updated_student_dict)
+        self.add_student(student_instance)
+
 
 # # for testing:
 # student = Student("er4", "Harry", "Potter", "potter@hogwartsedu.com", "nnnn")

@@ -23,15 +23,20 @@ class Student(Wizard):
         new_student = Student(student_dict["id"], student_dict["first_name"], student_dict["last_name"],
                               student_dict["email"], student_dict["password"], student_dict["existing_magic_skills"],
                               student_dict["desired_magic_skills"])
-        print(f'The new student account {student_dict["email"]} has been created ')
+        print(f'The student {student_dict["email"]} has been converted from json string to the Student instance ')
         return new_student
 
     def get_existing_skills(self):
         # todo : validate skills dict if it's empty
         return self.existing_magic_skills
 
-    def get_skill_by_name(self, skill_name):
+    def get_existing_skill_by_name(self, skill_name):
         for skill in self.existing_magic_skills:
+            if skill["name"] == skill_name:
+                return skill
+
+    def get_desired_skill_by_name(self, skill_name):
+        for skill in self.desired_magic_skills:
             if skill["name"] == skill_name:
                 return skill
 
@@ -45,7 +50,7 @@ class Student(Wizard):
 
     def update_existing_skill(self, skill_name, level_value):
         # todo : validate skills level should be 1-5, name string length > 0
-        existing_skill = self.get_skill_by_name(skill_name)
+        existing_skill = self.get_existing_skill_by_name(skill_name)
         existing_skill["level"] = level_value
         self.last_updated_time = datetime.now().strftime("%m-%d-%y %H:%I:%S")
         print(f"The existing skill {skill_name} has been updated! ")
@@ -59,6 +64,13 @@ class Student(Wizard):
         desired_skill = DesiredSkill(skill_name)
         desired_skill.set_level(level_value)
         self.desired_magic_skills.append(desired_skill.__dict__)
+        self.last_updated_time = datetime.now().strftime("%m-%d-%y %H:%I:%S")
+        print(f"The desired skill {skill_name} has been updated! ")
+
+    def update_desired_skill(self, skill_name, level_value):
+        # todo : validate skills level should be 1-5, name string length > 0
+        desired_skill = self.get_desired_skill_by_name(skill_name)
+        desired_skill["level"] = level_value
         self.last_updated_time = datetime.now().strftime("%m-%d-%y %H:%I:%S")
         print(f"The desired skill {skill_name} has been updated! ")
 

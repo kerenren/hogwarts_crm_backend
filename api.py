@@ -2,8 +2,10 @@ from flask import Flask, json, abort, request, render_template
 from user.student import Student
 from data.data_layer import DataLayer
 from validators.validators import Validators
+from flask_cors import CORS
 
 app = Flask(__name__)
+cors = CORS(app)
 app.config['SECRET_KEY'] = '9OLWxND4o83j4K4iuopO'
 
 data_layer = DataLayer()
@@ -17,8 +19,6 @@ def before_first_request_func():
     new_students_dict = data_layer.load_all_students()
     return new_students_dict
 
-
-# question: why variables inside before_first_request_func can not access outer scope variable even with the same name?
 
 
 # The homepage is what will be shown to the user when they visit the / URL
