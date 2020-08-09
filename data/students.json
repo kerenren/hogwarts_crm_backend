@@ -4,7 +4,6 @@
         "first_name": "Ron",
         "last_name": "Weasley",
         "email": "weasley44@hogwartsedu.com",
-        "password": "wwww",
         "creation_time": "07-19-20",
         "last_updated_time": "07-19-20 13:01:14",
         "existing_magic_skills": [
@@ -73,7 +72,6 @@
         "first_name": "Jasmin",
         "last_name": "Weasley",
         "email": "Jasmin@hogwartsedu.com",
-        "password": "wwww",
         "creation_time": "07-28-20",
         "last_updated_time": "",
         "existing_magic_skills": [
@@ -142,7 +140,6 @@
         "first_name": "Hermione",
         "last_name": "Granger",
         "email": "hermione@hogwartsedu.com",
-        "password": "nnnn",
         "creation_time": "08-09-20",
         "last_updated_time": "08-09-20 23:11:58",
         "existing_magic_skills": [
@@ -206,18 +203,85 @@
             }
         ]
     },
+    "renkelei.kelly@gmail.com": {
+        "id": "4636dc-403a-2d5c-0bae-bd607ae3ede",
+        "first_name": "Kelei",
+        "last_name": "Ren",
+        "email": "renkelei.kelly@gmail.com",
+        "creation_time": "08-09-20",
+        "last_updated_time": "",
+        "existing_magic_skills": [
+            {
+                "name": "Potion making",
+                "level": 4
+            },
+            {
+                "name": "Spells",
+                "level": 4
+            },
+            {
+                "name": "Quidditch",
+                "level": 3
+            },
+            {
+                "name": "Animagus",
+                "level": 4
+            },
+            {
+                "name": "Apparate",
+                "level": 4
+            },
+            {
+                "name": "Metamorphmagi",
+                "level": 4
+            },
+            {
+                "name": "Parseltongue",
+                "level": 4
+            }
+        ],
+        "desired_magic_skills": [
+            {
+                "name": "Potion making",
+                "level": 5
+            },
+            {
+                "name": "Spells",
+                "level": 4
+            },
+            {
+                "name": "Quidditch",
+                "level": 5
+            },
+            {
+                "name": "Animagus",
+                "level": 3
+            },
+            {
+                "name": "Apparate",
+                "level": 3
+            },
+            {
+                "name": "Metamorphmagi",
+                "level": 4
+            },
+            {
+                "name": "Parseltongue",
+                "level": 4
+            }
+        ]
+    },
     "potter@hogwartsedu.com": {
         "id": "er4",
         "first_name": "Harry",
         "last_name": "Potter",
         "email": "potter@hogwartsedu.com",
-        "password": "yyyy",
-        "creation_time": "08-09-20",
-        "last_updated_time": "08-09-20 23:11:58",
+        "creation_time": "08-10-20",
+        "last_updated_time": "08-10-20 00:12:08",
         "existing_magic_skills": [
             {
                 "name": "Potion making",
-                "level": 3
+                "level": 4
             },
             {
                 "name": "Spells",
@@ -272,6 +336,74 @@
             {
                 "name": "Parseltongue",
                 "level": 4
+            }
+        ]
+    },
+    "ginny_weasley@hogwarts.com": {
+        "id": "1573ca6-fc58-8147-ee25-6aa2c1a4bf5",
+        "first_name": "Ginny",
+        "last_name": "Weasley",
+        "email": "ginny_weasley@hogwarts.com",
+        "creation_time": "08-10-20",
+        "last_updated_time": "08-10-20 00:12:04",
+        "existing_magic_skills": [
+            {
+                "name": "Potion making",
+                "level": 4
+            },
+            {
+                "name": "Spells",
+                "level": 3
+            },
+            {
+                "name": "Quidditch",
+                "level": 4
+            },
+            {
+                "name": "Animagus",
+                "level": 3
+            },
+            {
+                "name": "Apparate",
+                "level": 4
+            },
+            {
+                "name": "Metamorphmagi",
+                "level": 3
+            },
+            {
+                "name": "Parseltongue",
+                "level": 4
+            }
+        ],
+        "desired_magic_skills": [
+            {
+                "name": "Potion making",
+                "level": 4
+            },
+            {
+                "name": "Spells",
+                "level": 3
+            },
+            {
+                "name": "Quidditch",
+                "level": 4
+            },
+            {
+                "name": "Animagus",
+                "level": 5
+            },
+            {
+                "name": "Apparate",
+                "level": 3
+            },
+            {
+                "name": "Metamorphmagi",
+                "level": 4
+            },
+            {
+                "name": "Parseltongue",
+                "level": 5
             }
         ]
     }

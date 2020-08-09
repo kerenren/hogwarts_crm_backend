@@ -36,9 +36,10 @@ def index():
 # * get all students -> Students list  page
 @app.route('/students')
 def get_all_students():
-    if students_dict == {}:
+    current_students_dict = data_layer.load_all_students()
+    if current_students_dict == {}:
         abort(404, "students_dict is empty")
-    return app.response_class(response=json.dumps(students_dict),
+    return app.response_class(response=json.dumps(current_students_dict),
                               status=200,
                               mimetype="application/json")
 
@@ -130,10 +131,10 @@ def add_student():
 @app.route("/admin/log_in", methods=["POST"])
 def log_in():
     # ? how to transfer user credential to json?
-    student_credential = request.json
+    admin_credential = request.json
 
     # validate student credential
-    validator = Validators(student_credential)
+    validator = Validators(admin_credential)
     validator.valid_user_fields_exist()
     validation = validator.valid_user_credential(students_dict)
     if not validation:

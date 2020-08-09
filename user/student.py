@@ -6,8 +6,8 @@ import json
 
 
 class Student(Wizard):
-    def __init__(self, id, first_name, last_name, email, password, existing_magic_skills=[], desired_magic_skills=[]):
-        super().__init__(id, first_name, last_name, email, password)
+    def __init__(self, id, first_name, last_name, email, existing_magic_skills=[], desired_magic_skills=[]):
+        super().__init__(id, first_name, last_name, email)
         self.creation_time = datetime.now().strftime("%m-%d-%y")
         self.last_updated_time = ""
         self.existing_magic_skills = existing_magic_skills
@@ -21,7 +21,7 @@ class Student(Wizard):
     @staticmethod
     def from_json(student_dict):
         new_student = Student(student_dict["id"], student_dict["first_name"], student_dict["last_name"],
-                              student_dict["email"], student_dict["password"], student_dict["existing_magic_skills"],
+                              student_dict["email"], student_dict["existing_magic_skills"],
                               student_dict["desired_magic_skills"])
         print(f'The student {student_dict["email"]} has been converted from json string to the Student instance ')
         return new_student
