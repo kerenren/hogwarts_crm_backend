@@ -24,16 +24,8 @@ class DataLayer:
 
     # getting a specific student instance from the dictionary by its email.
     def get_student(self, student_email):
-        if student_email not in self.__students.keys():
-            raise ValueError("Email doesn't exist!")
-
-        student = self.__students[student_email]
-        if isinstance(student, dict):
-            student_instance = Student.from_json(student)
-            return student_instance
-        else:
-            print(type(student))
-            return student
+        student_instance = DataLayer.mongoDB.get_student(student_email)
+        return student_instance
 
     def extract_objs_by_value(self, value, objs):
         new_objs = {}

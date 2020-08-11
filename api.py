@@ -46,18 +46,13 @@ def get_all_students():
 # get student by email - email will be a path param -> Student page
 @app.route("/students/<string:student_email>")
 def get_student(student_email):
-    if students_dict == {}:
-        abort(404, "students_dict is empty")
-
-    if len(student_email) == 0:
-        abort(404, "students_email is missing")
-    if type(student_email) != str:
-        abort(404, "students_email should be a string")
-    # student email existence has been validated inside data_layer.get_student method
-    student = data_layer.get_student(student_email)
-    return app.response_class(response=json.dumps(student),
-                              status=200,
-                              mimetype="application/json")
+    try:
+        student = data_layer.get_student(student_email)
+        return app.response_class(response=json.dumps(student),
+                                  status=200,
+                                  mimetype="application/json")
+    except ValueError as error:
+        abort(404, error)
 
 
 #  get added students per day of the year - day will be a query param E.g. 2016_01_03 -> dashboard page
@@ -106,28 +101,30 @@ def add_student():
         return app.response_class(response=json.dumps({"Error": "Please provide connection information"}),
                                   status=400,
                                   mimetype='application/json')
+    try:
+        # validate student fields and existence
+        validator = Validators(student_dict)
+        validator.valid_user_fields_exist()
+        validator.valid_user_fields_type()
 
-    # validate student fields and existence
-    validator = Validators(student_dict)
-    validator.valid_user_fields_exist()
-    validator.valid_user_fields_type()
+        # new_student = Student.from_json(student_dict)
+        authorization = request.headers.get("Authorization").split(":")
+        auth_email = authorization[0]
+        auth_password = authorization[1]
 
-    # new_student = Student.from_json(student_dict)
-    authorization = request.headers.get("Authorization").split(":")
-    auth_email = authorization[0]
-    auth_password = authorization[1]
+        with open("data/admin.json", "r") as r_f:
+            admins_dict = json.load(r_f)
+            if auth_email not in admins_dict.keys() or admins_dict[auth_email]['password'] != auth_password:
+                abort(404, "Only Admin can create new student account")
+            # add new student to data_layer students dict and students.json
 
-    with open("data/admin.json", "r") as r_f:
-        admins_dict = json.load(r_f)
-        if auth_email not in admins_dict.keys() or admins_dict[auth_email]['password'] != auth_password:
-            abort(404, "Only Admin can create new student account")
-        # add new student to data_layer students dict and students.json
+        output = data_layer.add_student(student_dict)
 
-    output = data_layer.add_student(student_dict)
-
-    return app.response_class(response=json.dumps(output),
-                              status=200,
-                              mimetype="application/json")
+        return app.response_class(response=json.dumps(output),
+                                  status=200,
+                                  mimetype="application/json")
+    except ValueError as error:
+        abort(404, error)
 
 
 # login a student(email + password) - the route will receive a json with the data.
@@ -166,6 +163,7 @@ def edit_student():
     data_layer.persist_students()
     return app.response_class(response=json.dumps({"message": "The student's capabilities has been updated"}))
 
+
 # Create DELETE route for delete a student from database
 @app.route("/admin/delete", methods=["DELETE"])
 def delete_student():
@@ -175,8 +173,11 @@ def delete_student():
         abort(404, "wrong secrete_password!")
 
     output = data_layer.remove_student(student_dict)
+    if output['Status'] == "Student not found.":
+        abort(404, "Student not found.")
 
     return app.response_class(response=json.dumps(output),
+                              status=200,
                               mimetype="application/json")
 
 
