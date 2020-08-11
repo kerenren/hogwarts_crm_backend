@@ -6,8 +6,8 @@ import json
 
 
 class Student(Wizard):
-    def __init__(self, id, first_name, last_name, email, existing_magic_skills=[], desired_magic_skills=[]):
-        super().__init__(id, first_name, last_name, email)
+    def __init__(self, first_name, last_name, email, existing_magic_skills=[], desired_magic_skills=[]):
+        super().__init__(first_name, last_name, email)
         self.creation_time = datetime.now().strftime("%m-%d-%y")
         self.last_updated_time = ""
         self.existing_magic_skills = existing_magic_skills

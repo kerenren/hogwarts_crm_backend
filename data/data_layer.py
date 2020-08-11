@@ -1,23 +1,23 @@
 from validators.validators import Validators
 import os, pathlib, json
 from user.student import Student
+from data.MongoDataLayer import MongoDataLayer
 
 
 # The DataLayer class will have a dictionary containing the students class instances.
 # each instance will be stored using its email property as the key within the dictionary.
 class DataLayer:
 
-    def __init__(self, students={}):
-        self.__students = students
+    mongoDB = MongoDataLayer()
+
+    def __init__(self):
+        pass
 
     # setting and getting a specific student from the dictionary by its email.
     def add_student(self, student):
-        if student.get_email() in self.__students.keys():
-            raise ValueError("Email already exists!")
-
-        self.__students[student.get_email()] = student
-        # the student here actually represents the student instance
-        print(student, " has been added to data_layer students_dict:")
+        output = DataLayer.mongoDB.add_student(student)
+        print("student:", student['email'], " has been added to hogwats_crm database!")
+        return output
 
     def remove_student(self, student):
         if student["email"] not in self.__students.keys():
@@ -66,7 +66,8 @@ class DataLayer:
 
     # receiving all students within the dictionary.
     def get_all_students(self):
-        return self.__students
+        students_list = DataLayer.mongoDB.get_all_students()
+        return students_list
 
     def convert_students_to_json_str(self):
         all_students_dict = self.get_all_students()

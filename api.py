@@ -1,4 +1,4 @@
-from flask import Flask, json, abort, request, render_template
+from flask import Flask, json, abort, request
 from user.student import Student
 from data.data_layer import DataLayer
 from validators.validators import Validators
@@ -20,7 +20,6 @@ def before_first_request_func():
     return new_students_dict
 
 
-
 # The homepage is what will be shown to the user when they visit the / URL
 @app.route("/")
 def index():
@@ -36,10 +35,10 @@ def index():
 # * get all students -> Students list  page
 @app.route('/students')
 def get_all_students():
-    current_students_dict = data_layer.load_all_students()
-    if current_students_dict == {}:
-        abort(404, "students_dict is empty")
-    return app.response_class(response=json.dumps(current_students_dict),
+    students_list = data_layer.get_all_students()
+    if not students_dict or students_dict == []:
+        abort(404, "students collection is empty")
+    return app.response_class(response=json.dumps(students_list),
                               status=200,
                               mimetype="application/json")
 
@@ -103,13 +102,17 @@ def count_existing_skill(existing_skill):
 @app.route("/admin/add_student", methods=["POST"])
 def add_student():
     student_dict = request.json
+    if student_dict is None or student_dict == {}:
+        return app.response_class(response=json.dumps({"Error": "Please provide connection information"}),
+                                  status=400,
+                                  mimetype='application/json')
 
     # validate student fields and existence
     validator = Validators(student_dict)
     validator.valid_user_fields_exist()
     validator.valid_user_fields_type()
 
-    new_student = Student.from_json(student_dict)
+    # new_student = Student.from_json(student_dict)
     authorization = request.headers.get("Authorization").split(":")
     auth_email = authorization[0]
     auth_password = authorization[1]
@@ -119,12 +122,12 @@ def add_student():
         if auth_email not in admins_dict.keys() or admins_dict[auth_email]['password'] != auth_password:
             abort(404, "Only Admin can create new student account")
         # add new student to data_layer students dict and students.json
-        data_layer.add_student(new_student)
-        data_layer.persist_students()
 
-        return app.response_class(response=json.dumps(new_student.__dict__),
-                                  status=200,
-                                  mimetype="application/json")
+    output = data_layer.add_student(student_dict)
+
+    return app.response_class(response=json.dumps(output),
+                              status=200,
+                              mimetype="application/json")
 
 
 # login a student(email + password) - the route will receive a json with the data.

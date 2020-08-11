@@ -1,4 +1,25 @@
-Hogwarts CRM
+##### Prerequisites
+###### Get started with mongodb (for MacOS)
+To run MongoDB (i.e. the mongod process) as a macOS service, issue the following:
+`brew services start mongodb-community@4.4`
+
+To stop a mongod running as a macOS service, use the following command as needed:
+`brew services stop mongodb-community@4.4`
+
+###### Connect and Use MongoDB
+To begin using MongoDB, connect a mongo shell to the running instance. From a new terminal, issue the following:
+ `mongo`
+
+###### PyMongo
+[Mongodb Python plugin- PyMongo totorial][https://pymongo.readthedocs.io/en/stable/tutorial.html]
+Installing with pip:
+ `python -m pip install pymongo`
+>> Before we start, make sure that you have the PyMongo distribution installed. In the Python shell, the following should run without raising an exception:
+`import pymongo`
+>> This tutorial also assumes that a MongoDB instance is running on the default host and port. Assuming you have downloaded and installed MongoDB, you can start it like so:
+ `mongod`
+
+##### Hogwarts CRM
 
 
 You are instructed to build the CRM for the “Hogwarts School of Magic”
@@ -261,3 +282,6 @@ All routes will return jsons (either single or lists of jsons).
 
 Ninja:
 After a new student process has ended successfully, send email to the student’s email account, with the credentials.
+
+
+[https://pymongo.readthedocs.io/en/stable/tutorial.html]: https://pymongo.readthedocs.io/en/stable/tutorial.hztml
