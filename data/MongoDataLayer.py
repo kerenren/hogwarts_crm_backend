@@ -26,7 +26,7 @@ class MongoDataLayer:
         return students_list
 
     def add_student(self, student_dict):
-        if self.is_email_existing(student_dict) is True:
+        if self.is_email_existing(student_dict):
             raise ValueError("Email already exists!")
 
         response = self.__students_collection.insert_one(student_dict)
@@ -35,7 +35,7 @@ class MongoDataLayer:
         return output
 
     def remove_student(self, student_dict):
-        if self.is_email_existing(student_dict) is True:
+        if self.is_email_existing(student_dict):
             response = self.__students_collection.delete_one({"email": student_dict["email"]})
             output = {'Status': 'Successfully Deleted' if response.deleted_count > 0 else "Student not found."}
             return output
@@ -53,3 +53,11 @@ class MongoDataLayer:
 
         student_instance = Student.from_json(student_dict)
         return student_instance
+
+    def edit_student(self, updated_student_dict, student_email):
+        if not self.is_email_existing(updated_student_dict):
+            raise ValueError("Student email is not registered")
+        response = self.__students_collection.update({'email': student_email}, {'$set': updated_student_dict})
+        print(response)
+        output = {'Status': "Successfully Updated student's profile" if response['nModified'] > 0 else "Nothing was updated."}
+        return output

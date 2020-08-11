@@ -149,20 +149,21 @@ def log_in():
 @app.route("/admin/edit_student", methods=["PUT"])
 def edit_student():
     updated_student = request.json
+    try:
+        # validate students fields value, types and existence
+        validator = Validators(updated_student)
+        validator.valid_user_fields_exist()
+        validator.valid_user_fields_type()
 
-    # validate students fields value, types and existence
-    validator = Validators(updated_student)
-    validator.valid_user_fields_exist()
-    validator.valid_user_fields_type()
-    # todo: validate by mongodb
-    validator.valid_user_exist(students_dict)
+        student_email = updated_student["email"]
+        output = data_layer.edit_student(updated_student, student_email)
 
-    student_email = updated_student["email"]
-    data_layer.edit_student(updated_student, student_email)
+        if output['Status'] == "Nothing was updated.":
+            abort(404, "Nothing was updated.")
 
-    data_layer.persist_students()
-    return app.response_class(response=json.dumps({"message": "The student's capabilities has been updated"}))
-
+        return app.response_class(response=json.dumps(output))
+    except ValueError as error:
+        abort(404, error)
 
 # Create DELETE route for delete a student from database
 @app.route("/admin/delete", methods=["DELETE"])

@@ -7,7 +7,6 @@ from data.MongoDataLayer import MongoDataLayer
 # The DataLayer class will have a dictionary containing the students class instances.
 # each instance will be stored using its email property as the key within the dictionary.
 class DataLayer:
-
     mongoDB = MongoDataLayer()
 
     def __init__(self):
@@ -45,7 +44,6 @@ class DataLayer:
                 cnt = len(duplicated_skills_list)
                 counter += cnt
         return counter
-
 
     #  get added students per day of the year
     def get_students_per_day(self, creation_time):
@@ -96,50 +94,5 @@ class DataLayer:
             raise Exception("student.json file doesn't exist")
 
     def edit_student(self, updated_student_dict, student_email):
-        if not self.__students[student_email]:
-            raise ValueError("Student email is not registered")
-        student_instance = self.get_student(student_email)
-        existing_magic_skills = updated_student_dict["existing_magic_skills"]
-        desired_magic_skills = updated_student_dict["desired_magic_skills"]
-        new_first_name = updated_student_dict["first_name"]
-        new_last_name = updated_student_dict["last_name"]
-
-        student_instance.update_first_name(new_first_name)
-        student_instance.update_last_name(new_last_name)
-
-        for skill in existing_magic_skills:
-            student_instance.update_existing_skill(skill["name"], skill["level"])
-
-        for skill in desired_magic_skills:
-            student_instance.update_desired_skill(skill["name"], skill["level"])
-        self.remove_student(updated_student_dict)
-        self.add_student(student_instance)
-
-
-# # for testing:
-# student = Student("er4", "Harry", "Potter", "potter@hogwartsedu.com", "nnnn")
-# student.add_existing_skill("Obliviate",3)
-# student.add_existing_skill("Expelliarmus", 4)
-# student.add_existing_skill("Flying", 5)
-# student.add_desired_skill("invisible", 1)
-# student.add_desired_skill("Apparition", 5)
-# data = DataLayer()
-# data.add_student(student)
-# # data.persist_students()
-# # data.load_all_students()
-# data.get_student("potter@hogwartsedu.com")
-
-# student2 = Student.from_json(
-#     '{"id": "er4", "first_name": "Hermione", "last_name": "Granger", "email": "hermione@hogwartsedu.com", "password": "nnnn", "creation_time": "07-16-20", "last_updated_time": "", "existing_magic_skills": [{"name": "expanding", "level": 5}], "desired_magic_skills": [{"name": "invisible", "level": 1}, {"name": "fly", "level": 5}]}')
-# student2.add_desired_skill("Riddikulu", 5)
-# data.add_student(student2)
-# # data.remove_student(student)
-# student_json_str = data.convert_students_to_json_str()
-# student_dict = json.loads(student_json_str)
-# print(student_json_str)
-
-
-# data.load_all_students()
-# print(data.get_all_students())
-# student_2=data.get_student("hermione@hogwartsedu.com")
-# print(help(student2))
+        output = DataLayer.mongoDB.edit_student(updated_student_dict, student_email)
+        return output
