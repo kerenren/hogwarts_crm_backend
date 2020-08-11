@@ -157,6 +157,7 @@ def edit_student():
     validator = Validators(updated_student)
     validator.valid_user_fields_exist()
     validator.valid_user_fields_type()
+    # todo: validate by mongodb
     validator.valid_user_exist(students_dict)
 
     student_email = updated_student["email"]
@@ -165,21 +166,17 @@ def edit_student():
     data_layer.persist_students()
     return app.response_class(response=json.dumps({"message": "The student's capabilities has been updated"}))
 
-
-# question, after load all student from json to student_dictionary in datalayer, and call get_student from datalayer, the student instance changed from Student class to dict. How should we deal with this in real database practice?
-
-# Create DELETE (with an empty implementation at this point) route for delete a student
+# Create DELETE route for delete a student from database
 @app.route("/admin/delete", methods=["DELETE"])
 def delete_student():
-    student = request.json
+    student_dict = request.json
     secrete_password = request.headers.get("secrete_password")
     if secrete_password != "88888":
         abort(404, "wrong secrete_password!")
-    data_layer.remove_student(student)
 
-    data_layer.persist_students()
-    return app.response_class(response=json.dumps({"message": "user has been deleted!"}),
-                              status=200,
+    output = data_layer.remove_student(student_dict)
+
+    return app.response_class(response=json.dumps(output),
                               mimetype="application/json")
 
 

@@ -14,16 +14,13 @@ class DataLayer:
         pass
 
     # setting and getting a specific student from the dictionary by its email.
-    def add_student(self, student):
-        output = DataLayer.mongoDB.add_student(student)
-        print("student:", student['email'], " has been added to hogwats_crm database!")
+    def add_student(self, student_dict):
+        output = DataLayer.mongoDB.add_student(student_dict)
         return output
 
-    def remove_student(self, student):
-        if student["email"] not in self.__students.keys():
-            raise ValueError("Email doesn't exist!")
-        del self.__students[student["email"]]
-        print(student, "student has been removed from data_layer students_dict:")
+    def remove_student(self, student_dict):
+        output = DataLayer.mongoDB.remove_student(student_dict)
+        return output
 
     # getting a specific student instance from the dictionary by its email.
     def get_student(self, student_email):
