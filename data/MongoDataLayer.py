@@ -28,7 +28,9 @@ class MongoDataLayer:
         return students_list
 
     def get_all_admins(self):
-        admins_cursor = self.__admins_collection.aggregate([{'$project': {'_id': 0, "first_name":1,"last_name":1,"creation_time":1, "last_updated_time":1,"email":1}}])
+        admins_cursor = self.__admins_collection.aggregate([{'$project': {'_id': 0, "first_name": 1, "last_name": 1,
+                                                                          "creation_time": 1, "last_updated_time": 1,
+                                                                          "email": 1}}])
         admins_list = list(admins_cursor)
         return admins_list
 
@@ -66,13 +68,14 @@ class MongoDataLayer:
             raise ValueError("Student email is not registered")
         response = self.__students_collection.update({'email': student_email}, {'$set': updated_student_dict})
         print(response)
-        output = {'Status': "Successfully Updated student's profile" if response['nModified'] > 0 else "Nothing was updated."}
+        output = {
+            'Status': "Successfully Updated student's profile" if response['nModified'] > 0 else "Nothing was updated."}
         return output
 
-    def log_in(self,credential):
-        email=credential['email']
-        password=credential['password']
-        admin_cursor = self.__admins_collection.find({'email':{'$eq': '$email','password':{'$eq': '$password'}}})
+    def log_in(self, credential):
+        email = credential['email']
+        password = credential['password']
+        admin_cursor = self.__admins_collection.find({'email': {'$eq': '$email', 'password': {'$eq': '$password'}}})
         if admin_cursor:
             return True
         else:
@@ -86,3 +89,16 @@ class MongoDataLayer:
                   'Admin_ID': str(response.inserted_id)}
         return output
 
+    def count_desired_skill_popularity(self):
+        pipeline = [{"$project": {"desiredSkills": "$desired_magic_skills"}}, {"$unwind": "$desiredSkills"},
+                    {"$group": {"_id": "$desiredSkills.name", "sum": {"$sum": "$desiredSkills.level"}}}]
+        desired_skills_popularity = self.__students_collection.aggregate(pipeline)
+        popularity = list(desired_skills_popularity)
+        return popularity
+
+    def count_existing_skill_popularity(self):
+        pipeline = [{"$project": {"existingSkills": "$existing_magic_skills"}}, {"$unwind": "$existingSkills"},
+                    {"$group": {"_id": "$existingSkills.name", "sum": {"$sum": "$existingSkills.level"}}}]
+        existing_skills_popularity = self.__students_collection.aggregate(pipeline)
+        popularity = list(existing_skills_popularity)
+        return popularity

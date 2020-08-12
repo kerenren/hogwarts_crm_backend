@@ -45,6 +45,14 @@ class DataLayer:
                 counter += cnt
         return counter
 
+    def count_desired_skill_popularity(self):
+        desired_skills_popularity = DataLayer.mongoDB.count_desired_skill_popularity()
+        return desired_skills_popularity
+
+    def count_existing_skill_popularity(self):
+        existing_skills_popularity = DataLayer.mongoDB.count_existing_skill_popularity()
+        return existing_skills_popularity
+
     #  get added students per day of the year
     def get_students_per_day(self, creation_time):
         all_students = self.get_all_students()

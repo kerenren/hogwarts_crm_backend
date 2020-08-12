@@ -56,19 +56,23 @@ def get_students_per_day():
 # get count of desired skills (how many of the students desire a specific skill)
 @app.route("/students/desired_magic_skill/<string:desired_skill>")
 def count_desired_skill(desired_skill):
-    cnt = data_layer.count_skill("desired_magic_skills", desired_skill)
-    return app.response_class(response=json.dumps({desired_skill: cnt}),
-                              status=200,
-                              mimetype="application/json")
+    desired_skills_popularity = data_layer.count_desired_skill_popularity()
+    for skill in desired_skills_popularity:
+        if skill['_id'] == desired_skill:
+            return app.response_class(response=json.dumps(skill),
+                                      status=200,
+                                      mimetype="application/json")
 
 
 # get count for how many students have each type of skill
 @app.route("/students/existing_magic_skill/<string:existing_skill>")
 def count_existing_skill(existing_skill):
-    cnt = data_layer.count_skill("existing_magic_skills", existing_skill)
-    return app.response_class(response=json.dumps({existing_skill: cnt}),
-                              status=200,
-                              mimetype="application/json")
+    existing_skills_popularity = data_layer.count_existing_skill_popularity()
+    for skill in existing_skills_popularity:
+        if skill['_id'] == existing_skill:
+            return app.response_class(response=json.dumps(skill),
+                                      status=200,
+                                      mimetype="application/json")
 
 
 # add a new student (request which will be invoked by admin)  - the route will receive a json with the student fields.
@@ -119,6 +123,7 @@ def log_in():
     return app.response_class(response=json.dumps({"message": "user log in successfully!"}),
                               status=200,
                               mimetype="application/json")
+
 
 @app.route("/admin/signup", methods=["POST"])
 def sign_up():
