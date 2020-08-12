@@ -7,6 +7,7 @@ class MongoDataLayer:
         self.__client = pymongo.MongoClient("localhost", 27017)
         self.__db = self.__client["hogwarts_crm"]
         self.__students_collection = self.__db["students"]
+        self.__admins_collection = self.__db["admins"]
 
     def __init__(self):
         self.__create()
@@ -20,10 +21,16 @@ class MongoDataLayer:
     def get_all_students(self):
         students_list = []
         students = self.__students_collection.find()
+
         for student in students:
             student.pop("_id")
             students_list.append(student)
         return students_list
+
+    def get_all_admins(self):
+        admins_cursor = self.__admins_collection.aggregate([{'$project': {'_id': 0, "first_name":1,"last_name":1,"creation_time":1, "last_updated_time":1,"email":1}}])
+        admins_list = list(admins_cursor)
+        return admins_list
 
     def add_student(self, student_dict):
         if self.is_email_existing(student_dict):
@@ -61,3 +68,21 @@ class MongoDataLayer:
         print(response)
         output = {'Status': "Successfully Updated student's profile" if response['nModified'] > 0 else "Nothing was updated."}
         return output
+
+    def log_in(self,credential):
+        email=credential['email']
+        password=credential['password']
+        admin_cursor = self.__admins_collection.find({'email':{'$eq': '$email','password':{'$eq': '$password'}}})
+        if admin_cursor:
+            return True
+        else:
+            return False
+
+    def sign_up(self, admin_dict):
+        if self.__admins_collection.find_one({"email": {'$in': [admin_dict["email"]]}}):
+            raise ValueError('Admin email has already been registered')
+        response = self.__admins_collection.insert_one(admin_dict)
+        output = {'Status': 'Successfully registered!',
+                  'Admin_ID': str(response.inserted_id)}
+        return output
+

@@ -6,37 +6,15 @@ from flask_cors import CORS
 
 app = Flask(__name__)
 cors = CORS(app)
-app.config['SECRET_KEY'] = '9OLWxND4o83j4K4iuopO'
 
 data_layer = DataLayer()
-students_dict = data_layer.load_all_students()
-skills_dict = {}
 
 
-@app.before_first_request
-def before_first_request_func():
-    new_data_layer = DataLayer()
-    new_students_dict = data_layer.load_all_students()
-    return new_students_dict
-
-
-# The homepage is what will be shown to the user when they visit the / URL
-@app.route("/")
-def index():
-    # return render_template("index.html")
-    return "Welcome to visit Hogwarts CRM system!"
-
-
-# the dashboard page (/dashboard) will be shown to the user once they’ve logged into their account
-# @app.route("/dashboard")
-# def dashboard():
-#     return render_template("dashboard.html")
-
-# * get all students -> Students list  page
+# get all students -> Students list  page
 @app.route('/students')
 def get_all_students():
     students_list = data_layer.get_all_students()
-    if not students_dict or students_dict == []:
+    if not students_list or students_list == []:
         abort(404, "students collection is empty")
     return app.response_class(response=json.dumps(students_list),
                               status=200,
@@ -130,19 +108,34 @@ def add_student():
 # login a student(email + password) - the route will receive a json with the data.
 @app.route("/admin/log_in", methods=["POST"])
 def log_in():
-    # ? how to transfer user credential to json?
     admin_credential = request.json
+    print(admin_credential)
+    print(type(admin_credential))
+    output = data_layer.log_in(admin_credential)
 
-    # validate student credential
-    validator = Validators(admin_credential)
-    validator.valid_user_fields_exist()
-    validation = validator.valid_user_credential(students_dict)
-    if not validation:
+    if not output:
         abort(404, "wrong user email or password")
 
     return app.response_class(response=json.dumps({"message": "user log in successfully!"}),
                               status=200,
                               mimetype="application/json")
+
+@app.route("/admin/signup", methods=["POST"])
+def sign_up():
+    admin_dict = request.json
+    print(admin_dict)
+    if admin_dict is None or admin_dict == {}:
+        return app.response_class(response=json.dumps({"Error": "Please provide connection information"}),
+                                  status=400,
+                                  mimetype='application/json')
+    try:
+        output = data_layer.sign_up(admin_dict)
+
+        return app.response_class(response=json.dumps(output),
+                                  status=200,
+                                  mimetype="application/json")
+    except ValueError as error:
+        abort(404, error)
 
 
 # edit student - the route will receive a json with the student fields
@@ -164,6 +157,7 @@ def edit_student():
         return app.response_class(response=json.dumps(output))
     except ValueError as error:
         abort(404, error)
+
 
 # Create DELETE route for delete a student from database
 @app.route("/admin/delete", methods=["DELETE"])

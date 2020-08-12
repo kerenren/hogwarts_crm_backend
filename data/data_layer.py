@@ -56,42 +56,18 @@ class DataLayer:
         students_list = DataLayer.mongoDB.get_all_students()
         return students_list
 
+    def sign_up(self, admin_dict):
+        output = DataLayer.mongoDB.sign_up(admin_dict)
+        return output
+
+    def log_in(self, admin_credential):
+        output = DataLayer.mongoDB.log_in(admin_credential)
+        return output
+
     def convert_students_to_json_str(self):
         all_students_dict = self.get_all_students()
         student_json_str = json.dumps(all_students_dict, default=lambda o: o.__dict__, indent=4)
         return student_json_str
-
-    # persisting all the students' class instances in the dictionary into a json file called students.json
-    def persist_students(self):
-        # find the folder obj of json file
-        folder_where_json_file_is = pathlib.Path(__file__).parent
-        #  create path to json file with os.separator
-        db_file = str(folder_where_json_file_is) + os.sep + "students.json"
-
-        # check if json file exist
-        if os.path.exists(db_file):
-            os.remove(db_file)
-        else:
-            raise Exception("students.json file doesn't exist")
-
-        students_json = self.convert_students_to_json_str()
-
-        with open(db_file, "a") as write_file:
-            write_file.write(students_json)
-            return "Persist is succeed"
-
-    # loading the data from students.json, converting it to students class instances and populating the instances
-    # into the students dictionary object of the DataLayer class.
-    def load_all_students(self):
-        folder_where_json_file_is = pathlib.Path(__file__).parent
-        read_file = str(folder_where_json_file_is) + os.sep + "students.json"
-        print(read_file)
-        if os.path.exists(read_file):
-            with open(read_file, "r") as r_file:
-                self.__students = json.load(r_file)
-            return self.__students
-        else:
-            raise Exception("student.json file doesn't exist")
 
     def edit_student(self, updated_student_dict, student_email):
         output = DataLayer.mongoDB.edit_student(updated_student_dict, student_email)
