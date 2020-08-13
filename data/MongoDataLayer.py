@@ -1,16 +1,21 @@
 import pymongo
 from user.student import Student
+from data.BaseDataLayer import BaseDataLayer
 
 
-class MongoDataLayer:
-    def __create(self):
+class MongoDataLayer(BaseDataLayer):
+    def __connect(self):
         self.__client = pymongo.MongoClient("localhost", 27017)
         self.__db = self.__client["hogwarts_crm"]
         self.__students_collection = self.__db["students"]
         self.__admins_collection = self.__db["admins"]
 
+    def shut_down(self):
+        self.__client.close()
+
     def __init__(self):
-        self.__create()
+        super().__init__()
+        self.__connect()
 
     def is_email_existing(self, student_dict):
         if self.__students_collection.find_one({"email": {'$in': [student_dict["email"]]}}):

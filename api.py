@@ -1,13 +1,13 @@
 from flask import Flask, json, abort, request
-from user.student import Student
-from data.data_layer import DataLayer
+from data.MongoDataLayer import MongoDataLayer
+import atexit
 from validators.validators import Validators
 from flask_cors import CORS
 
 app = Flask(__name__)
 cors = CORS(app)
 
-data_layer = DataLayer()
+data_layer = MongoDataLayer()
 
 
 # get all students -> Students list  page
@@ -180,6 +180,9 @@ def delete_student():
                               status=200,
                               mimetype="application/json")
 
+@atexit.register
+def goodbye():
+    data_layer.shut_down()
 
 if __name__ == "__main__":
     app.run()
