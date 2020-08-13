@@ -55,9 +55,8 @@ class DataLayer:
 
     #  get added students per day of the year
     def get_students_per_day(self, creation_time):
-        all_students = self.get_all_students()
-        students_per_day = self.extract_objs_by_value(creation_time, all_students)
-        return students_per_day
+        total_dict = DataLayer.mongoDB.get_students_per_day(creation_time)
+        return total_dict
 
     # receiving all students within the dictionary.
     def get_all_students(self):

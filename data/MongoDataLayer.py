@@ -102,3 +102,10 @@ class MongoDataLayer:
         existing_skills_popularity = self.__students_collection.aggregate(pipeline)
         popularity = list(existing_skills_popularity)
         return popularity
+
+    def get_students_per_day(self, creation_time):
+        pipeline = [{'$match': {'creation_time': creation_time}}, {'$count': "email"},
+                    {'$group': {'_id': creation_time, 'total': {'$sum': '$email'}}}]
+        cursor = self.__students_collection.aggregate(pipeline)
+        total_dict = list(cursor)
+        return total_dict
