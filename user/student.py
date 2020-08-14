@@ -6,10 +6,10 @@ import json
 
 
 class Student(Wizard):
-    def __init__(self, first_name, last_name, email, existing_magic_skills=[], desired_magic_skills=[]):
+    def __init__(self, first_name, last_name, email, creation_time, last_updated_time, existing_magic_skills=[], desired_magic_skills=[]):
         super().__init__(first_name, last_name, email)
-        self.creation_time = datetime.now().strftime("%m-%d-%y")
-        self.last_updated_time = ""
+        self.creation_time = creation_time
+        self.last_updated_time = last_updated_time
         self.existing_magic_skills = existing_magic_skills
         self.desired_magic_skills = desired_magic_skills
 
@@ -20,8 +20,8 @@ class Student(Wizard):
     # converts user from json to Student
     @staticmethod
     def from_json(student_dict):
-        new_student = Student(student_dict["id"], student_dict["first_name"], student_dict["last_name"],
-                              student_dict["email"], student_dict["existing_magic_skills"],
+        new_student = Student(student_dict["first_name"], student_dict["last_name"],
+                              student_dict["email"], student_dict["creation_time"], student_dict["last_updated_time"], student_dict["existing_magic_skills"],
                               student_dict["desired_magic_skills"])
         print(f'The student {student_dict["email"]} has been converted from json string to the Student instance ')
         return new_student
@@ -73,15 +73,3 @@ class Student(Wizard):
         desired_skill["level"] = level_value
         self.last_updated_time = datetime.now().strftime("%m-%d-%y %H:%I:%S")
         print(f"The desired skill {skill_name} has been updated! ")
-
-# student = Student("er4", "Harry", "Potter", "potter@hogwartsedu.com", "nnnn")
-# student.add_desired_skill("invisible", 1)
-# student.add_desired_skill("fly", 5)
-# student.add_existing_skill("expanding", 5)
-# print(student.__str__())
-# print(type(student))
-#
-# # load json string into python object
-# student2 = Student.from_json(
-#     '{"id": "er4", "first_name": "Hermione", "last_name": "Granger", "email": "hermione@hogwartsedu.com", "password": "nnnn", "creation_time": "07-16-20", "last_updated_time": "", "existing_magic_skills": [{"name": "expanding", "level": 5}], "desired_magic_skills": [{"name": "invisible", "level": 1}, {"name": "fly", "level": 5}]}')
-# print(student2)

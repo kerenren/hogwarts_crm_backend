@@ -1,6 +1,7 @@
 import pymongo
 from user.student import Student
 from data.BaseDataLayer import BaseDataLayer
+from datetime import datetime
 
 
 class MongoDataLayer(BaseDataLayer):
@@ -43,7 +44,10 @@ class MongoDataLayer(BaseDataLayer):
         if self.is_email_existing(student_dict):
             raise ValueError("Email already exists!")
 
-        response = self.__students_collection.insert_one(student_dict)
+        # create instance of student
+        student_instance = Student.from_json(student_dict)
+
+        response = self.__students_collection.insert_one(student_instance.__dict__)
         output = {'Status': 'Successfully inserted!',
                   'Student_ID': str(response.inserted_id)}
         return output
@@ -55,23 +59,28 @@ class MongoDataLayer(BaseDataLayer):
             return output
 
     def get_student(self, student_email):
-        student_dict = self.__students_collection.find_one({"email": {'$in': [student_email]}})
-        if not student_dict:
+        cursor = self.__students_collection.find_one({"email": student_email})
+
+        if not cursor:
             raise ValueError("Student not found")
-        if not self.__db.find():
+        if not self.__students_collection.find():
             raise ValueError("database students collection is empty")
         if len(student_email) == 0:
             raise ValueError("students_email is missing")
         if type(student_email) != str:
             raise ValueError("students_email should be a string")
 
-        student_instance = Student.from_json(student_dict)
-        return student_instance
+        student_instance = Student.from_json(cursor)
+        student_dict = student_instance.__dict__
+
+        return student_dict
 
     def edit_student(self, updated_student_dict, student_email):
         if not self.is_email_existing(updated_student_dict):
             raise ValueError("Student email is not registered")
-        response = self.__students_collection.update({'email': student_email}, {'$set': updated_student_dict})
+        student_instance = Student.from_json(updated_student_dict)
+        student_instance.last_updated_time = datetime.now().strftime("%m-%d-%y %H:%M:%S")
+        response = self.__students_collection.update({'email': student_email}, {'$set': student_instance.__dict__})
         print(response)
         output = {
             'Status': "Successfully Updated student's profile" if response['nModified'] > 0 else "Nothing was updated."}
