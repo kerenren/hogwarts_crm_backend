@@ -19,7 +19,7 @@ Installing with pip:
 >> This tutorial also assumes that a MongoDB instance is running on the default host and port. Assuming you have downloaded and installed MongoDB, you can start it like so:
  `mongod`
 
-##### Hogwarts CRM
+#### Hogwarts CRM
 
 
 You are instructed to build the CRM for the “Hogwarts School of Magic”
@@ -120,24 +120,6 @@ Create POST/PUT (with an empty implementation at this point) routes for:
 
 Create DELETE (with an empty implementation at this point) route for delete a student
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 Flask Milestone2:
 Create a class for a student.
 
@@ -196,6 +178,128 @@ Failed validation will return false.
 
 
 Ninja: Failed validation will raise an exception of type ValidationError
+
+#### MongoDB Milestone1:
+
+
+Refactor the existing implementation:
+At this point we stop using the file system in order to persist data.
+We will persist the Hogwarts related data to the mongoDB database.
+
+
+Create a class called MongoDataLayer.
+This class (instance) can only be accessed from within the previously created data layer.
+
+
+Create all the mongo collections required in order to persist and fetch the CRM data.
+The mongoDB database should be called: hogwarts
+
+Within the MongoDataLayer class create all the required functions for adding / updating / fetching/ deleting  data in/ from  mongoDB.
+These functions will be called by corresponding functions that were previously defined within the Data layer class.
+
+
+Data fetched from the DB should be converted to a class instance whenever possible.
+E.g. loading a student from DB: after fetching the data from the student collection, the fetched student dictionary data should be converted to a class instance. 
+
+
+At this point we will stop using the  @app.before_first_request
+in order to load previously saved data into the dictionary of the data layer.
+whenever we need data we will fetch it directly from the database and serve it to the client.
+Whenever we need to persist data we will save it directly to the database.
+At this point we will stop using any dictionary objects within the data layer class. 
+
+
+Within the data layer class create a new function that will take the student data which is stored within the students.json file (in the file system) and persist all the students in the mongoDB database using the MongoDataLayer class.
+After migrating all the student.json data, you may delete the student.json file from the file system and git repository.
+
+
+Make sure not to return the password field value to the client (React).
+
+
+
+
+
+
+
+#### MongoDB Milestone2:
+
+
+Within the previously created MongoDataLayer class,
+create the functions for fetching data for the dashboard:
+* Counting how many students have each existing skill.
+* Counting how many students have each desired skill.
+* Counting how many students were added per day
+
+The functions will use mongoDB aggregation queries in order to fetch the data.
+
+
+Create a backup file of the hogwarts database.
+Either using mongodump or mongoexport commands.
+The backup files should be stored in a folder named: db_backup.
+* https://docs.mongodb.com/manual/tutorial/backup-and-restore-tools/
+*https://www.tutorialspoint.com/mongodb/mongodb_create_backup.htm#:~:text=To%20create%20backup%20of%20database,backup%20of%20your%20remote%20server.
+
+
+Implement a Flask shutdown “hook” that will invoke a function within the data layer class, that in turn will  call a mongoDataLayer function to close the pymongo client.
+
+
+Ninja: Within the previously created MongoDataLayer class,
+create the functions for fetching data for the following requirements:
+* get the 5 most recently updated students.
+* get the 5 least recently created students.
+* get students with the same last name and different first name.
+* get students which do not have any existing skill with level 5.
+
+Within api.py create corresponding routes for the newly created functions. 
+
+
+#### Hogwarts CRM- SQL
+
+Let’s revise the Hogwarts CRM project to use SQL Database.
+
+Using the following entities: 
+
+
+Students
+Admin Users
+Magic Skills
+Existing Magic Skills
+Desired Magic Skills
+
+
+Day 1
+
+Create an Entities Relationship Diagram (ERD) of all entities of the Hogwarts CRM and the relationships between them.
+Consider when to use one to one relationships,
+when to use one to many relationships,
+And when to use many to many relationships.
+
+You can choose whichever tool you prefer for the drawing. 
+
+
+Create a new Mysql schema (database) called Hogwarts . 
+
+Create the database tables representing the different entities from the ERD. 
+Don’t forget to include foreign keys when required.
+
+
+Create a new GIT branch called: mysql_integration
+Make sure you commit your code to this branch.
+
+
+Create a class called MysqlDataLayer which will use the python mysql connector in order to communicate with the Mysql Database.
+
+
+Create the required functions in order to populate data into the database tables.
+
+
+Create the functions to delete specific rows in a specified table in the database.
+
+
+Create the functions to delete all rows in a specified table in the database.
+
+
+
 
 
 
