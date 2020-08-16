@@ -1,13 +1,17 @@
 from flask import Flask, json, abort, request
 from data.MongoDataLayer import MongoDataLayer
+from data.MySqlDataLayer import MySqlDataLayer
 import atexit
 from validators.validators import Validators
 from flask_cors import CORS
-
+from decouple import config
 app = Flask(__name__)
 cors = CORS(app)
 
-data_layer = MongoDataLayer()
+if config("DB") == "Mysql":
+    data_layer = MySqlDataLayer()
+else:
+    data_layer = MongoDataLayer()
 
 
 # get all students -> Students list  page
