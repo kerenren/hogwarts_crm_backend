@@ -26,11 +26,34 @@ class MySqlDataLayer(BaseDataLayer):
         self.__connect()
 
     def add_student(self, student_dict):
+        desired_skills = student_dict["desired_magic_skills"]
+        skill_values = []
+        existing_skills = student_dict['existing_magic_skills']
         try:
             self.__mydb.start_transaction()
-            sql = "INSERT INTO students (id,first_name, last_name, email, password, creation_time, last_updated_time) VALUES (default, %s, %s, %s, %s, curdate() ,CURRENT_TIMESTAMP)"
-            data_student = (student_dict['first_name'], student_dict['last_name'], student_dict['email'], student_dict['password'])
-            self.cursor.execute(sql, data_student)
+            sql_wizard = "INSERT INTO wizards (id,first_name, last_name, email, creation_time, last_updated_time) VALUES (default, %s, %s, %s, curdate() ,CURRENT_TIMESTAMP)"
+            data_wizard = (student_dict['first_name'], student_dict['last_name'], student_dict['email'])
+            sql_student = "INSERT INTO students (id, wizard_id) VALUES (default, LAST_INSERT_ID())"
+
+            sql_skill = "INSERT INTO skills (id, name,skill_type,level, student_id) VALUES (default, %s, %s, %s, %s)"
+
+            self.cursor.execute(sql_wizard, data_wizard)
+            self.cursor.execute(sql_student)
+            student_id = self.cursor.lastrowid
+
+            def get_skills(skills, type):
+                for skill in skills:
+                    skill_values.append((skill['name'], type, str(skill['level']), student_id))
+                return skill_values
+
+            desired_skill_values = get_skills(desired_skills, 'desired')
+            existing_skills_values = get_skills(existing_skills, 'existing')
+
+            for skill_value in desired_skill_values:
+                self.cursor.execute(sql_skill, skill_value)
+            for skill_value in existing_skills_values:
+                self.cursor.execute(sql_skill, skill_value)
+
             print(self.cursor.rowcount, "record inserted.")
             self.__mydb.commit()
             return self.cursor.rowcount
