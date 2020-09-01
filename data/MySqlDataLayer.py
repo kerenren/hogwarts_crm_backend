@@ -47,16 +47,50 @@ class MySqlDataLayer(BaseDataLayer):
                 return skill_values
 
             desired_skill_values = get_skills(desired_skills, 'desired')
-            existing_skills_values = get_skills(existing_skills, 'existing')
+            skills_values = get_skills(existing_skills, 'existing')
 
-            for skill_value in desired_skill_values:
-                self.cursor.execute(sql_skill, skill_value)
-            for skill_value in existing_skills_values:
+
+            for skill_value in skills_values:
                 self.cursor.execute(sql_skill, skill_value)
 
             print(self.cursor.rowcount, "record inserted.")
             self.__mydb.commit()
             return self.cursor.rowcount
+
+        except mysql.connector.Error as error:
+            print("Failed to update record to database rollback: {}".format(error))
+            self.__mydb.rollback()
+
+        finally:
+            self.cursor.close()
+
+    def get_all_students(self):
+        students_list = []
+        try:
+            self.__mydb.start_transaction()
+            sql_all_students = "SELECT first_name,last_name,email,creation_time,last_updated_time, students.id from students inner join wizards on wizards.id = students.wizard_id"
+            self.cursor.execute(sql_all_students)
+            ans = self.cursor.fetchall()
+
+            for item in ans:
+                student = {'first_name': item[0], 'last_name': item[1], 'email': item[2],
+                           'creation_time': item[3],
+                           'last_updated_time': item[4], 'desired_magic_skills': [],
+                           'existing_magic_skills': []}
+
+                sql_get_skills_by_student_id = "SELECT name , skill_type, level from skills WHERE student_id = %s"
+                self.cursor.execute(sql_get_skills_by_student_id, (item[-1],))
+                skills = self.cursor.fetchall()
+                print(skills)
+
+                for skill in skills:
+                    if skill[1] == 'desired':
+                        student['desired_magic_skills'].append({"name": skill[0], "level": skill[2]})
+                    if skill[1] == 'existing':
+                        student['existing_magic_skills'].append({"name": skill[0], "level": skill[2]})
+
+                students_list.append(student)
+            return students_list
 
         except mysql.connector.Error as error:
             print("Failed to update record to database rollback: {}".format(error))
