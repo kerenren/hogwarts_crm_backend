@@ -1,4 +1,12 @@
 ##### Prerequisites
+install all requirements
+configure .env file:
+
+`MYSQL_USER=<username> 
+PASSWORD=<sqlpassword>
+DB=<Mysql/MongoDB>`
+
+
 ###### Get started with mongodb (for MacOS)
 To run MongoDB (i.e. the mongod process) as a macOS service, issue the following:
 `brew services start mongodb-community@4.4`
@@ -9,6 +17,19 @@ To stop a mongod running as a macOS service, use the following command as needed
 ###### Connect and Use MongoDB
 To begin using MongoDB, connect a mongo shell to the running instance. From a new terminal, issue the following:
  `mongo`
+ 
+###### Get started with mysql (for MacOS)
+to add aliases to your shell's resource file to make it easier to access commonly used programs such as mysql and mysqladmin from the command line
+`alias mysql=/usr/local/mysql/bin/mysql`
+`alias mysqladmin=/usr/local/mysql/bin/mysqladmin`
+`alias mysqlshow=/usr/local/mysql/bin/mysqlshow`
+
+###### Connect sql server:
+`mysql -u root -p`
+And enter the password
+
+### to start the server
+run api.py from pycharm
 
 ###### PyMongo
 [Mongodb Python plugin- PyMongo totorial][https://pymongo.readthedocs.io/en/stable/tutorial.html]
@@ -19,7 +40,7 @@ Installing with pip:
 >> This tutorial also assumes that a MongoDB instance is running on the default host and port. Assuming you have downloaded and installed MongoDB, you can start it like so:
  `mongod`
 
-#### Hogwarts CRM
+## Hogwarts CRM
 
 
 You are instructed to build the CRM for the “Hogwarts School of Magic”
@@ -78,22 +99,7 @@ Skill will have the following fields:
 name
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Flask Milestone1:
+### Flask Milestone1:
 
 
 Create a new Project.
@@ -120,7 +126,7 @@ Create POST/PUT (with an empty implementation at this point) routes for:
 
 Create DELETE (with an empty implementation at this point) route for delete a student
 
-Flask Milestone2:
+### Flask Milestone2:
 Create a class for a student.
 
 
@@ -215,12 +221,6 @@ After migrating all the student.json data, you may delete the student.json file 
 
 Make sure not to return the password field value to the client (React).
 
-
-
-
-
-
-
 #### MongoDB Milestone2:
 
 
@@ -253,12 +253,11 @@ create the functions for fetching data for the following requirements:
 Within api.py create corresponding routes for the newly created functions. 
 
 
-#### Hogwarts CRM- SQL
+## Hogwarts CRM- SQL
 
 Let’s revise the Hogwarts CRM project to use SQL Database.
 
 Using the following entities: 
-
 
 Students
 Admin Users
@@ -266,8 +265,7 @@ Magic Skills
 Existing Magic Skills
 Desired Magic Skills
 
-
-Day 1
+### Day 1
 
 Create an Entities Relationship Diagram (ERD) of all entities of the Hogwarts CRM and the relationships between them.
 Consider when to use one to one relationships,
@@ -298,45 +296,7 @@ Create the functions to delete specific rows in a specified table in the databas
 
 Create the functions to delete all rows in a specified table in the database.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Flask Milestone3:
+### Flask Milestone3:
 Create a class called DataLayer.
 The class will have a dictionary containing the students class instances.
 each instance will be stored using its email property as the key within the dictionary.
@@ -371,11 +331,7 @@ Add a validation for the create new student function that validates that there a
 prior to adding a new student to the dictionary.
 
 
-
-
-
-
-Flask Milestone4:
+###  Flask Milestone4:
 Remove the empty implementations from the flask routes in api.py
 And using the functions previously created in the dataLayer class
 implement all the required functionalities for all of the flask routes.
