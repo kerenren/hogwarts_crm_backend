@@ -98,3 +98,21 @@ class MySqlDataLayer(BaseDataLayer):
 
         finally:
             self.cursor.close()
+
+    def remove_student(self, student_dict):
+        try:
+            self.__mydb.start_transaction()
+            sql_delete = 'DELETE from wizards WHERE email = %s'
+            self.cursor.execute(sql_delete,(student_dict['email'],))
+
+            print(self.cursor.rowcount, "record deleted.")
+            self.__mydb.commit()
+            output = {'Status': 'Successfully Deleted' if self.cursor.rowcount > 0 else "Student not found."}
+            return output
+
+        except mysql.connector.Error as error:
+            print("Failed to update record to database rollback: {}".format(error))
+            self.__mydb.rollback()
+
+        finally:
+            self.cursor.close()
